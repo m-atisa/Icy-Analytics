@@ -3,8 +3,17 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import password_validation, authenticate
 
 #%%
-from account.models import Account, AccountManager
+from account.models import Account, AccountManager, ExcelDocument
 #%%
+# class DocumentForm(forms.BaseModelForm  ):
+#     # docfile = forms.FileField(
+#     #     label='Select a csv file',
+#     #     help_text='Max size of 30 megabytes'
+#     # )
+#     class Meta:
+#         model = ExcelDocument
+#         fields = ['user','upload']
+
 class AccountAuthenticationForm(forms.ModelForm):
     """
     A form for logging in a user.

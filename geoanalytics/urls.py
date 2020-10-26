@@ -22,7 +22,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 #%%
 from account.views import (
-    Registration, LogOut, LogIn
+    Registration, LogOut, LogIn, FileUploadView
 )
 #%%
 urlpatterns = [
@@ -31,6 +31,7 @@ urlpatterns = [
     path('signin/', LogIn.as_view(), name='signin'),
     path('register/', Registration.as_view(), name='register'),
     path('logout/', LogOut.as_view(), name='logout'),
+    path('interactive/', FileUploadView.as_view(), name='fileupload'),
     path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
     path('documentation/', TemplateView.as_view(template_name='documentation.html'), name='documentation'),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),

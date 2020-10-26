@@ -6,12 +6,25 @@ from django.views.generic import TemplateView
 # from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
 from django.views.generic import RedirectView
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 #%%
 from account.forms import AccountCreationForm, AccountAuthenticationForm
+from account.models import ExcelDocument
 #%%
+class FileUploadView(CreateView):
+    model = ExcelDocument
+    fields = ['upload',]
+    success_url = reverse_lazy('fileupload')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['documents'] = ExcelDocument.objects.all()
+        return context
+
+
 class Registration(View):
 
     def post(self, request):
