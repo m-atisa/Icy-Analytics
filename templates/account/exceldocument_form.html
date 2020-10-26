@@ -1,62 +1,39 @@
 {% extends 'base.html' %}   
 
+{% load crispy_forms_tags %}
+{% load static %}
+
 {% block content %}
-<!-- {% if documents %}
+<script src="{% static 'icy/js/tabs.js' %}"></script>
+<button class="tablink" onclick="openPage('News', this)" id="defaultOpen">Maps</button>
+<button class="tablink" onclick="openPage('Home', this)">Files</button>
+
+<div id="uploadFile", class="tabcontent">
+    <h1>{{user}}'s files</h1>
+    <h2>Upload</h2>
+    <div class="upload-div">
+        <h1>File Upload</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+        <hr>
         <ul>
         {% for document in documents %}
-            <li><a href="{{ document.upload.url }}">{{ document.upload.name }}</a></li>
+            <li>
+                <a href="{{ document.upload.url }}">{{ document.upload.name }}</a>
+                <small>({{ document.upload.size|filesizeformat }})</small>
+            </li>
         {% endfor %}
         </ul>
-    {% else %}
-        <p>No documents.</p>
-    {% endif %}
-
-        Upload form. Note enctype attribute!
-        <form action="{% url 'fileupload' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <p>{{ form.non_field_errors }}</p>
-            <p>{{ form.upload.label_tag }} {{ form.upload.help_text }}</p>
-            <p>
-                {{ form.upload.errors }}
-                {{ form.upload }}
-            </p>
-            <p><input type="submit" value="Upload" /></p>
-        </form> -->
-
-<h1>You're logged in {{user}} !</h1>
-
-<h2>Upload</h2>
-<div style="padding:40px;margin:40px;border:1px solid #ccc">
-    <h1>Django File Upload</h1>
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Submit</button>
-    </form><hr>
-    <ul>
-    {% for document in documents %}
-        <li>
-            <a href="{{ document.upload.url }}">{{ document.upload.name }}</a>
-            <small>({{ document.upload.size|filesizeformat }})</small>
-        </li>
-    {% endfor %}
-    </ul>
+    </div>
+</div>
+<div id="Maps" class="tabcontent"> 
+    <h1>{{user}}'s maps</h1>
+    <h2>Maps</h2>
 </div>
 
 
+
 {% endblock %}
-<!-- <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="document">
-    <button type="submit">Upload file</button>
-</form>
-{% if url %}
-    <p>Uploaded file: <a href="{{ url }}">{{ url }}</a></p>
-{% endif %}
-<div class="container-fluid">
-    <div class="row">
-        {% autoescape off %}
-        {{ plot_div }}
-        {% endautoescape %}
-    </div>
-</div> -->

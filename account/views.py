@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from account.forms import AccountCreationForm, AccountAuthenticationForm, ExcelForm
 from account.models import ExcelDocument
 #%%
-class FileUploadView(CreateView):
+class InteractiveView(CreateView):
     def post(self, request):
         form = ExcelForm(request.POST, request.FILES)
         if form.is_valid():
@@ -34,25 +34,6 @@ class FileUploadView(CreateView):
         context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.retrieve_data(request)
         return render(request, 'account/exceldocument_form.html', context)
-
-# class FileUploadView(ContextMixin, View):
-
-#     model = ExcelDocument
-#     fields = ['upload',]
-#     success_url = reverse_lazy('fileupload')
-
-#     def get_documents(self):
-#         newdoc = ExcelDocument(user=self.request.user, upload=self.request.FILES['upload'])
-#         newdoc.user = self.request.user
-#         return newdoc
-
-#     def get_context_data(self, **kwargs):
-#         context = super(FileUploadView, self).get_context_data(**kwargs)
-#         context['documents'] = ExcelDocument.objects.all()
-#         return context
-    
-#     def get(self, **kwargs):
-#         return get_context_data(self, **kwargs)
 
 class Registration(View):
 
