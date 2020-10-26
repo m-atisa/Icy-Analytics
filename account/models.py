@@ -76,7 +76,15 @@ class ExcelDocument(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(Account, editable=False, null=True, blank=True, on_delete=models.CASCADE)
     upload = models.FileField(upload_to=user_directory_path, validators=[validate_extension])
-    
+
+    def retrieve_data(request):
+        # This query will yield you the files that are relevant to the specifc user.
+        data = ExcelDocument.objects.filter(user=request.user.id)
+        if data is None:
+            return []
+        else:
+            return data
+            
     
 
         

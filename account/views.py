@@ -26,13 +26,13 @@ class FileUploadView(CreateView):
             newdoc.save()
             context = {}
             context['form'] = ExcelForm(request.FILES)
-            context['documents'] = ExcelDocument.objects.all()
+            context['documents'] = ExcelDocument.retrieve_data(request)
             return render(request, 'account/exceldocument_form.html', context)
     
     def get(self, request):
         context = {}
         context['form'] = ExcelForm(request.FILES)
-        context['documents'] = ExcelDocument.objects.all()
+        context['documents'] = ExcelDocument.retrieve_data(request)
         return render(request, 'account/exceldocument_form.html', context)
 
 # class FileUploadView(ContextMixin, View):
