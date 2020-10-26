@@ -1,7 +1,29 @@
 {% extends 'base.html' %}   
 
 {% block content %}
-<h1>You're logged in {{ user.get_username }} !</h1>
+<!-- {% if documents %}
+        <ul>
+        {% for document in documents %}
+            <li><a href="{{ document.upload.url }}">{{ document.upload.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No documents.</p>
+    {% endif %}
+
+        Upload form. Note enctype attribute!
+        <form action="{% url 'fileupload' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+            <p>{{ form.upload.label_tag }} {{ form.upload.help_text }}</p>
+            <p>
+                {{ form.upload.errors }}
+                {{ form.upload }}
+            </p>
+            <p><input type="submit" value="Upload" /></p>
+        </form> -->
+
+<h1>You're logged in {{user}} !</h1>
 
 <h2>Upload</h2>
 <div style="padding:40px;margin:40px;border:1px solid #ccc">

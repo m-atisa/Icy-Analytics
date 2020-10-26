@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.views import View
 from django.views.generic import TemplateView
+from django.views.generic.base import ContextMixin
 
 # from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
@@ -11,19 +12,47 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+
 #%%
-from account.forms import AccountCreationForm, AccountAuthenticationForm
+from account.forms import AccountCreationForm, AccountAuthenticationForm, ExcelForm
 from account.models import ExcelDocument
 #%%
 class FileUploadView(CreateView):
-    model = ExcelDocument
-    fields = ['upload',]
-    success_url = reverse_lazy('fileupload')
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def post(self, request):
+        form = ExcelForm(request.POST, request.FILES)
+        if form.is_valid():
+            newdoc = ExcelDocument(user=request.user, upload=request.FILES['upload'])
+            newdoc.user = request.user
+            newdoc.save()
+            context = {}
+            context['form'] = ExcelForm(request.FILES)
+            context['documents'] = ExcelDocument.objects.all()
+            return render(request, 'account/exceldocument_form.html', context)
+    
+    def get(self, request):
+        context = {}
+        context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.objects.all()
-        return context
+        return render(request, 'account/exceldocument_form.html', context)
 
+# class FileUploadView(ContextMixin, View):
+
+#     model = ExcelDocument
+#     fields = ['upload',]
+#     success_url = reverse_lazy('fileupload')
+
+#     def get_documents(self):
+#         newdoc = ExcelDocument(user=self.request.user, upload=self.request.FILES['upload'])
+#         newdoc.user = self.request.user
+#         return newdoc
+
+#     def get_context_data(self, **kwargs):
+#         context = super(FileUploadView, self).get_context_data(**kwargs)
+#         context['documents'] = ExcelDocument.objects.all()
+#         return context
+    
+#     def get(self, **kwargs):
+#         return get_context_data(self, **kwargs)
 
 class Registration(View):
 

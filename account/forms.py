@@ -5,14 +5,10 @@ from django.contrib.auth import password_validation, authenticate
 #%%
 from account.models import Account, AccountManager, ExcelDocument
 #%%
-# class DocumentForm(forms.BaseModelForm  ):
-#     # docfile = forms.FileField(
-#     #     label='Select a csv file',
-#     #     help_text='Max size of 30 megabytes'
-#     # )
-#     class Meta:
-#         model = ExcelDocument
-#         fields = ['user','upload']
+class ExcelForm(forms.ModelForm):
+    class Meta:
+        model = ExcelDocument
+        fields = ('upload',)
 
 class AccountAuthenticationForm(forms.ModelForm):
     """
