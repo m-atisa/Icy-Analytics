@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -7,16 +7,17 @@ from django.views.generic import TemplateView
 from django.contrib.auth import logout
 from django.views.generic import RedirectView
 from django.shortcuts import redirect
-
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 #%%
-from account.forms import AccountCreationForm
-from .validators import *
+from account.forms import AccountCreationForm, AccountAuthenticationForm
 #%%
 class Registration(View):
 
     def post(self, request):
-        validators = [MinimumLengthValidator, NumberValidator, UppercaseValidator]
+        if request.user.is_authenticated:
+            return redirect('landing')
+
         context = {}
         form = AccountCreationForm(request.POST)
         if form.is_valid():
@@ -37,6 +38,33 @@ class Registration(View):
         return render(request, 'register.html', context)
 
 class LogOut(View):
+
     def get(self, request):
-        logout(request)
-        return redirect('landing')
+        if request.user.is_authenticated:
+            logout(request)
+            return redirect('landing')
+        else:
+            return redirect('landing')
+
+class LogIn(View):
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('landing')
+        context = {}
+        form = AccountAuthenticationForm(request.POST)
+        if form.is_valid():
+            email = request.POST['email']
+            password = request.POST['password']
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('landing')
+        context['singin_form'] = form
+        return render(request, 'signin.html', context)
+    
+    def get(self, request):
+        form = AccountAuthenticationForm(request.GET)
+        context = {}
+        context['signin_form'] = form
+        return render(request, 'signin.html', context)
