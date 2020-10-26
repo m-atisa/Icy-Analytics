@@ -7,7 +7,6 @@ from account.forms import AccountChangeForm, AccountCreationForm
 from account.models import Account
 #%%
 
-
 class AccountAdmin(BaseUserAdmin):
 
     # The forms to add and change user instances

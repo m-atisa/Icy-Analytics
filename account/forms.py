@@ -1,24 +1,30 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from account.models import Account, AccountManager
+from django.contrib.auth import password_validation
 
+from .validators import *
+
+# from django.core.validators import validate_email
+# from django.core.exceptions import ValidationError
+#%%
+from account.models import Account, AccountManager
+#%%
 class AccountCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput, help_text=password_validation.password_validators_help_text_html())
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-
+    
     class Meta:
         model = Account
-        fields = ('email', 'password', 'first_name', 'last_name')
+        fields = ('email', 'first_name', 'last_name')
 
     def clean_password2(self):
         # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise ValidationError("Passwords don't match")
-        return password2
+        if self.cleaned_data.get('password') != self.cleaned_data.get('password2'):
+            raise forms.ValidationError('Passwords are not equal')
+        password_validation.validate_password(self.cleaned_data.get('password'), None)
+        return self.cleaned_data
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -46,3 +52,5 @@ class AccountChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+

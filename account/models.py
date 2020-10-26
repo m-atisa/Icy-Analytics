@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+# from django.core import validators
+# from .validators import *
 
 class AccountManager(BaseUserManager):
-
+#  or not validate_email(email)
     # Must override create_user and create_superuser
     def create_user(self, email, password, first_name, last_name):
         if not email:
@@ -40,8 +41,8 @@ class AccountManager(BaseUserManager):
         return user
 
 class Account(AbstractBaseUser):
-    email        = models.EmailField(verbose_name="email", max_length=60, unique=True)
-    password     = models.CharField(verbose_name="password", max_length=100)
+    email        = models.EmailField(verbose_name="email", max_length=60, unique=True, help_text="Enter a Valid Email")
+    password     = models.CharField(verbose_name="password", max_length=100, help_text="Password must be unique not contain only numbers")
     date_joined  = models.DateTimeField(verbose_name="date", auto_now_add=True)
     last_login   = models.DateTimeField(verbose_name="last login", auto_now=True)
     is_admin     = models.BooleanField(default=False)
