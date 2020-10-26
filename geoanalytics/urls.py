@@ -30,7 +30,7 @@ urlpatterns = [
     path('pklp/', auth_views.LoginView.as_view(), name='login'), # Don't know why but this is needed
     path('signin/', LogIn.as_view(), name='signin'),
     path('register/', Registration.as_view(), name='register'),
-    path('logout/', LogOut.as_view()),
+    path('logout/', LogOut.as_view(), name='logout'),
     path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
     path('documentation/', TemplateView.as_view(template_name='documentation.html'), name='documentation'),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),

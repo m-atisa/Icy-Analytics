@@ -66,6 +66,13 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+class ExcelDocument(models.Model):
+    user = models.ForeignKey(User,editable=False,null=True,blank=True)
+    upload = models.FileField(upload_to=user_directory_path)
+
+    def user_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+        return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 
         

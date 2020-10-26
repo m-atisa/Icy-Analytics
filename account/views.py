@@ -57,14 +57,14 @@ class LogIn(View):
             email = request.POST['email']
             password = request.POST['password']
             user = authenticate(email=email, password=password)
-            if user is not None:
+            if user:
                 login(request, user)
                 return redirect('landing')
-        context['singin_form'] = form
+        context['signin_form'] = form
         return render(request, 'signin.html', context)
     
     def get(self, request):
-        form = AccountAuthenticationForm(request.GET)
+        form = AccountAuthenticationForm()
         context = {}
         context['signin_form'] = form
         return render(request, 'signin.html', context)

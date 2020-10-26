@@ -13,18 +13,19 @@
                     {{field.label_tag}}
                     {{field}}
                     {% if field.help_text %}
-                        <small style="color: black;">{{field.help_text}}</small>
+                        <small style="color: grey;">{{field.help_text}}</small>
                     {% endif %}
+
                     {% for error in field.errors %}
-                        <p style="color: red;">{{error}} error</p>
+                        <p style="color: red;">{{error}}</p>
                     {% endfor %}
-                    {% if signin_form.non_field_errors %}
-                        <div style="color: red">
-                            <p>{{signin_form.non_field_errors}}</p>
-                        </div>
-                    {% endif %}
                 </p>
             {% endfor %}
+            {% if signin_form.non_field_errors %}
+                <div style="color: red">
+                    <p>{{signin_form.non_field_errors}}</p>
+                </div>
+            {% endif %}
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Log In</button>
             </div>
