@@ -4,36 +4,49 @@
 {% load static %}
 
 {% block content %}
-<script src="{% static 'js/tabs.js' %}"></script>
-<button class="tablink" onclick="openPage('News', this)" id="defaultOpen">Maps</button>
-<button class="tablink" onclick="openPage('Home', this)">Files</button>
+<script src="{% static 'tabs.js' %}" defer></script>
 
-<div id="uploadFile", class="tabcontent">
-    <h1>{{user}}'s files</h1>
-    <h2>Upload</h2>
-    <div class="upload-div">
-        <h1>File Upload</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit</button>
-        </form>
-        <hr>
-        <ul>
-        {% for document in documents %}
-            <li>
-                <a href="{{ document.upload.url }}">{{ document.upload.name }}</a>
-                <small>({{ document.upload.size|filesizeformat }})</small>
-            </li>
-        {% endfor %}
-        </ul>
+<div class="container">
+    {% csrf_token %}
+    <ul class="tabs">
+        <li data-tab-target="#Maps" class="active tab">Maps</li>
+        <li data-tab-target="#Files" class="tab">Files</li>
+    </ul>
+    <div class="tab-content">
+        <div id="Files" data-tab-content>
+            <h1>{{user}}'s files</h1>
+            <h2>Upload</h2>
+            <div class="upload-div">
+                <h1>File Upload</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {{ form.as_p }}
+                    <button type="submit">Submit</button>
+                </form>
+                <hr>
+                <ul>
+                {% for document in documents %}
+                    <li>
+                        <a class="shortenName" href="{{ document.upload.url }}">{{ document.upload.name }}</a>
+                        <small>({{ document.upload.size|filesizeformat }})</small>
+                    </li>
+                {% endfor %}
+                <!-- <script>
+                    var document_name = "{{ document.upload.name }}".split("/")[1];
+                    $("a").append("${document_name}");
+                </script> -->
+                </ul>
+            </div>
+        </div>
+        <div id="Maps" data-tab-content class="active"> 
+            <h1>{{user}}'s maps</h1>
+            <h2>Maps</h2>
+        </div>
     </div>
 </div>
-<div id="Maps" class="tabcontent"> 
-    <h1>{{user}}'s maps</h1>
-    <h2>Maps</h2>
-</div>
+
 
 
 
 {% endblock %}
+
+
