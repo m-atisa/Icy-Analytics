@@ -5,9 +5,9 @@
 
 {% block content %}
 <script src="{% static 'tabs.js' %}" defer></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <div class="container">
-    {% csrf_token %}
     <ul class="tabs">
         <li data-tab-target="#Maps" class="active tab">Maps</li>
         <li data-tab-target="#Files" class="tab">Files</li>
@@ -19,6 +19,7 @@
             <div class="upload-div">
                 <h1>File Upload</h1>
                 <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit">Submit</button>
                 </form>
@@ -30,6 +31,7 @@
                         <small>({{ document.upload.size|filesizeformat }})</small>
                     </li>
                 {% endfor %}
+                
                 <!-- <script>
                     var document_name = "{{ document.upload.name }}".split("/")[1];
                     $("a").append("${document_name}");
@@ -40,6 +42,19 @@
         <div id="Maps" data-tab-content class="active"> 
             <h1>{{user}}'s maps</h1>
             <h2>Maps</h2>
+            {% for map in maps %}
+                {% autoescape off %}
+                    {{ maps }}
+                {% endautoescape %}
+            {% endfor %}
+            <!-- {% if graph %}  
+                <div style="width:600;height:500">
+                    {{ graph|safe }}
+                </div>
+            {% else %}
+                <p>No graph was provided.</p>
+            {% endif %} -->
+            <br>
         </div>
     </div>
 </div>

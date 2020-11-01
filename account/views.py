@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 #%%
 from account.forms import AccountCreationForm, AccountAuthenticationForm, ExcelForm
 from account.models import ExcelDocument
+from graphs.models import AmericanStates
 #%%
 class InteractiveView(CreateView):
     def post(self, request):
@@ -27,12 +28,23 @@ class InteractiveView(CreateView):
             context = {}
             context['form'] = ExcelForm(request.FILES)
             context['documents'] = ExcelDocument.retrieve_data(request)
+            maps = []
+            # for doc in context['documents']:
+            #     maps.append(AmericanStates('media/' + str(doc)))
+            # context['maps'] = maps
+            for doc in context['documents']:
+                maps.append(AmericanStates())
+            context['maps'] = maps
             return render(request, 'account/exceldocument_form.html', context)
     
     def get(self, request):
         context = {}
         context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.retrieve_data(request)
+        maps = []
+        for doc in context['documents']:
+            maps.append(AmericanStates())
+        context['maps'] = maps
         return render(request, 'account/exceldocument_form.html', context)
 
 class Registration(View):

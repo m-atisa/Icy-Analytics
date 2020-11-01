@@ -31,6 +31,7 @@ body {
 }
 .tab:hover {
     background-color:  rgb(20, 24, 255);
+    color: white;
 }
 .tab.active {
     background-color: rgb(77, 80, 252);  
