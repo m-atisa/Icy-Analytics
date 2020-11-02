@@ -3,12 +3,9 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import password_validation, authenticate
 
 #%%
-from account.models import Account, AccountManager, ExcelDocument
+from account.models import Account, AccountManager
+from files.models import ExcelDocument
 #%%
-class ExcelForm(forms.ModelForm):
-    class Meta:
-        model = ExcelDocument
-        fields = ('upload',)
 
 class AccountAuthenticationForm(forms.ModelForm):
     """

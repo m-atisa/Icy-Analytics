@@ -4,12 +4,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import ValidationError
 #%%
 from account.forms import AccountChangeForm, AccountCreationForm
-from account.models import Account, ExcelDocument
+from account.models import Account
 #%%
-
-# class DocumentAdmin(admin.ModelAdmin):
-#     readonly_fields = ('user',)
-#     form = ExcelDocument
 
 class AccountAdmin(BaseUserAdmin):
 
@@ -42,7 +38,6 @@ class AccountAdmin(BaseUserAdmin):
 
     ordering = ('email',)
     filter_horizontal = ()
-
 
 admin.site.register(Account, AccountAdmin)
 # admin.site.register(ExcelDocument, DocumentAdmin)

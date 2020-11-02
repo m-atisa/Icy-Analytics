@@ -1,10 +1,10 @@
+#%%
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
-# from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
 from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView
@@ -12,13 +12,19 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 
-
 #%%
-from account.forms import AccountCreationForm, AccountAuthenticationForm, ExcelForm
-from account.models import ExcelDocument
+from account.forms import AccountCreationForm, AccountAuthenticationForm
+from files.forms import ExcelForm
+from files.models import ExcelDocument
 from graphs.models import AmericanStates
 #%%
+import os
+#%%
 class InteractiveView(CreateView):
+
+    """
+    This method allows the user to upload a file 
+    """
     def post(self, request):
         form = ExcelForm(request.POST, request.FILES)
         if form.is_valid():
@@ -29,21 +35,31 @@ class InteractiveView(CreateView):
             context['form'] = ExcelForm(request.FILES)
             context['documents'] = ExcelDocument.retrieve_data(request)
             maps = []
-            # for doc in context['documents']:
-            #     maps.append(AmericanStates('media/' + str(doc)))
-            # context['maps'] = maps
-            for doc in context['documents']:
-                maps.append(AmericanStates())
+            
+            # Save the map to a file for later use
+            f = open(str(newdoc) + ".html", "a")
+            f.write(str(request.user) + "\maps\\" + AmericanStates(str(newdoc)))
+            f.close()
+            
+            # Read in the html maps 
+            user_maps = os.listdir(str(request.user) + "\maps\\")
+            for map in user_maps:
+                maps.append(open(map, "r").read())
+            
             context['maps'] = maps
             return render(request, 'account/exceldocument_form.html', context)
-    
+
     def get(self, request):
         context = {}
         context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.retrieve_data(request)
         maps = []
-        for doc in context['documents']:
-            maps.append(AmericanStates())
+
+        # Read in the html maps 
+        user_maps = os.listdir(str(request.user) + "\maps\\")
+        for map in user_maps:
+            maps.append(open(map, "r").read())
+
         context['maps'] = maps
         return render(request, 'account/exceldocument_form.html', context)
 
