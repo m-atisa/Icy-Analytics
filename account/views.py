@@ -38,11 +38,11 @@ class InteractiveView(CreateView):
             
             # Save the map to a file for later use
             f = open(str(newdoc) + ".html", "a")
-            f.write(str(request.user) + "\maps\\" + AmericanStates(str(newdoc)))
+            f.write("media/user_" + str(request.user.id) + "/maps_" + str(request.user.id) + "/" + AmericanStates(str(newdoc)))
             f.close()
             
             # Read in the html maps 
-            user_maps = os.listdir(str(request.user) + "\maps\\")
+            user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps_" + str(request.user.id))
             for map in user_maps:
                 maps.append(open(map, "r").read())
             
@@ -54,11 +54,12 @@ class InteractiveView(CreateView):
         context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.retrieve_data(request)
         maps = []
-
         # Read in the html maps 
-        user_maps = os.listdir(str(request.user) + "\maps\\")
-        for map in user_maps:
-            maps.append(open(map, "r").read())
+        #elif len(os.listdir("media/user_" + str(request.user.id) + "/files_" + str(request.user.id))) == 0:
+        if len(os.listdir("media")) > 0:
+            user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps_" + str(request.user.id))
+            for map in user_maps:
+                maps.append(open(map, "r").read())
 
         context['maps'] = maps
         return render(request, 'account/exceldocument_form.html', context)
@@ -119,3 +120,4 @@ class LogIn(View):
         context = {}
         context['signin_form'] = form
         return render(request, 'signin.html', context)
+
