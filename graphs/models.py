@@ -9,6 +9,7 @@ import chart_studio.tools as tls
 #%%
 from plotly.offline import plot
 from plotly.graph_objs import Scatter
+import plotly.graph_objects as go
 
 from django.db import models
 
@@ -18,74 +19,31 @@ tls.set_credentials_file(username='matisa360', api_key='894cZ80Vo3pEqSxdW6mw')
 #%%
 # Create your models here.
 
-def AmericanStates(csv_file_path):
-     x_data = [0,1,2,3]
-     y_data = [x**2 for x in x_data]
-     plot_div = plot([Scatter(x=x_data, y=y_data,
-     mode='lines', name='test', opacity=0.8, marker_color='green')],
-     output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+def AmericanStates(csv_file_path, name):
+     states = pd.read_csv(csv_file_path)
+     # fig = px.choropleth(locations=[states['code'].tolist()], locationmode="USA-states", color=[states[states.columns[1]].tolist()], scope="usa")
+
+     fig = go.Figure(data=go.Choropleth(
+          locations = states[states.columns[0]], # Spatial coordinates
+          z = states[states.columns[1]].astype(float), # Data to be color-coded
+          locationmode = 'USA-states', # set of locations match entries in `locations`
+          colorscale = 'Reds',
+          colorbar_title = "Millions USD",
+     ))
+
+     fig.update_layout(
+          title_text = name,
+          geo = dict(
+               scope='usa',
+               projection=go.layout.geo.Projection(type = 'albers usa'),
+               showlakes=True, # lakes
+               lakecolor='rgb(255, 255, 255)'
+          ),
+     )
+     plot_div = plot(fig, include_plotlyjs=False, output_type='div', show_link=False, link_text="")
      return plot_div
 
-def GetStateAbbreviations():
-     state_abbreviations = {
-        'Alabama': 'AL',
-        'Alaska': 'AK',
-        'American Samoa': 'AS',
-        'Arizona': 'AZ',
-        'Arkansas': 'AR',
-        'California': 'CA',
-        'Colorado': 'CO',
-        'Connecticut': 'CT',
-        'Delaware': 'DE',
-        'District of Columbia': 'DC',
-        'Florida': 'FL',
-        'Georgia': 'GA',
-        'Guam': 'GU',
-        'Hawaii': 'HI',
-        'Idaho': 'ID',
-        'Illinois': 'IL',
-        'Indiana': 'IN',
-        'Iowa': 'IA',
-        'Kansas': 'KS',
-        'Kentucky': 'KY',
-        'Louisiana': 'LA',
-        'Maine': 'ME',
-        'Maryland': 'MD',
-        'Massachusetts': 'MA',
-        'Michigan': 'MI',
-        'Minnesota': 'MN',
-        'Mississippi': 'MS',
-        'Missouri': 'MO',
-        'Montana': 'MT',
-        'Nebraska': 'NE',
-        'Nevada': 'NV',
-        'New Hampshire': 'NH',
-        'New Jersey': 'NJ',
-        'New Mexico': 'NM',
-        'New York': 'NY',
-        'North Carolina': 'NC',
-        'North Dakota': 'ND',
-        'Northern Mariana Islands':'MP',
-        'Ohio': 'OH',
-        'Oklahoma': 'OK',
-        'Oregon': 'OR',
-        'Pennsylvania': 'PA',
-        'Puerto Rico': 'PR',
-        'Rhode Island': 'RI',
-        'South Carolina': 'SC',
-        'South Dakota': 'SD',
-        'Tennessee': 'TN',
-        'Texas': 'TX',
-        'Utah': 'UT',
-        'Vermont': 'VT',
-        'Virgin Islands': 'VI',
-        'Virginia': 'VA',
-        'Washington': 'WA',
-        'West Virginia': 'WV',
-        'Wisconsin': 'WI',
-        'Wyoming': 'WY'
-     }
-     return state_abbreviations
+
 # states = pd.read_csv(csv_file_path) 
 # choosen_col = states.iloc[:,0][1]
 # states['text'] = str(choosen_col) + states[choosen_col].astype(str) + '<br>' 

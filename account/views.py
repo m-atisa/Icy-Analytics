@@ -46,13 +46,13 @@ class InteractiveView(CreateView):
             # Create the html map to save it
             document_name = str(newdoc).split('/')[2].split('.')[0]
             f = open("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html", "w+")
-            f.write(AmericanStates(document_name))
+            f.write(AmericanStates("media/" + str(newdoc), document_name))
             f.close()
 
             # Read in the html maps 
             user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps/")
             for map in user_maps:
-                maps.append(open(map, "r").read())
+                maps.append(open("media/user_" + str(request.user.id) + "/maps/" + map, "r").read())
             
             context['maps'] = maps
             return render(request, 'account/exceldocument_form.html', context)
@@ -95,9 +95,8 @@ class Registration(View):
         return render(request, 'register.html', context)
     
     def get(self, request):
-        form = AccountCreationForm()
         context = {}
-        context['registration_form'] = form
+        context['registration_form'] = AccountCreationForm()
         return render(request, 'register.html', context)
 
 class LogOut(View):
@@ -127,8 +126,7 @@ class LogIn(View):
         return render(request, 'signin.html', context)
     
     def get(self, request):
-        form = AccountAuthenticationForm()
         context = {}
-        context['signin_form'] = form
+        context['signin_form'] = AccountAuthenticationForm()
         return render(request, 'signin.html', context)
 
