@@ -20,6 +20,7 @@ from django.views.generic import TemplateView
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 #%%
 from account.views import (
     Registration, LogOut, LogIn, InteractiveView

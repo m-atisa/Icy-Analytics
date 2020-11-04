@@ -19,15 +19,12 @@ tls.set_credentials_file(username='matisa360', api_key='894cZ80Vo3pEqSxdW6mw')
 # Create your models here.
 
 def AmericanStates(csv_file_path):
-     states = pd.read_csv(csv_file_path) 
-     choosen_col = states.iloc[:,0][1]
-     states['text'] = str(choosen_col) + states[choosen_col].astype(str) + '<br>' 
-     data = [dict(type='choropleth', autocolorscale=False, locations=states['State Names'], 
-            z=states[passed_col], locationmode='USA-states', text=states['text'], colorscale='custom-colorscale', colorbar=dict(title=choosen_col))]
-     layout = dict(title=title_for_map, geo=dict(scope='usa', 
-            projection=dict(type='albers usa'), showlakes=True, lakecolor='rgb(66,165,245)'))
-     fig = dict(data=data, layout=layout)
-     return plot.iplot(fig, include_plotlyjs=False, output_type='div', show_link=False, link_text="")
+     x_data = [0,1,2,3]
+     y_data = [x**2 for x in x_data]
+     plot_div = plot([Scatter(x=x_data, y=y_data,
+     mode='lines', name='test', opacity=0.8, marker_color='green')],
+     output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+     return plot_div
 
 def GetStateAbbreviations():
      state_abbreviations = {
@@ -89,7 +86,15 @@ def GetStateAbbreviations():
         'Wyoming': 'WY'
      }
      return state_abbreviations
-
+# states = pd.read_csv(csv_file_path) 
+# choosen_col = states.iloc[:,0][1]
+# states['text'] = str(choosen_col) + states[choosen_col].astype(str) + '<br>' 
+# data = [dict(type='choropleth', autocolorscale=False, locations=states['State Names'], 
+#           z=states[passed_col], locationmode='USA-states', text=states['text'], colorscale='custom-colorscale', colorbar=dict(title=choosen_col))]
+# layout = dict(title=title_for_map, geo=dict(scope='usa', 
+#           projection=dict(type='albers usa'), showlakes=True, lakecolor='rgb(66,165,245)'))
+# fig = dict(data=data, layout=layout)
+# return plot.iplot(fig, include_plotlyjs=False, output_type='div', show_link=False, link_text="")
 
     
 
@@ -99,3 +104,5 @@ def GetStateAbbreviations():
 #      plot_div = plot([Scatter(x=x_data, y=y_data,
 #         mode='lines', name='test', opacity=0.8, marker_color='green')],
 #         output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
+

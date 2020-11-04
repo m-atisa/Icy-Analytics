@@ -40,7 +40,6 @@ class AccountAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 admin.site.register(Account, AccountAdmin)
-# admin.site.register(ExcelDocument, DocumentAdmin)
 admin.site.unregister(Group)
 
 

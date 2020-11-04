@@ -10,7 +10,7 @@ from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 
 #%%
 from account.forms import AccountCreationForm, AccountAuthenticationForm
@@ -26,6 +26,9 @@ class InteractiveView(CreateView):
     This method allows the user to upload a file 
     """
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('landing')
+
         form = ExcelForm(request.POST, request.FILES)
         if form.is_valid():
             newdoc = ExcelDocument(user=request.user, upload=request.FILES['upload'])
@@ -36,13 +39,18 @@ class InteractiveView(CreateView):
             context['documents'] = ExcelDocument.retrieve_data(request)
             maps = []
             
-            # Save the map to a file for later use
-            f = open(str(newdoc) + ".html", "a")
-            f.write("media/user_" + str(request.user.id) + "/maps_" + str(request.user.id) + "/" + AmericanStates(str(newdoc)))
-            f.close()
+            # Check if the directory is already created            
+            if not os.path.exists("media/user_" + str(request.user.id) + "/maps/"):
+                os.mkdir("media/user_" + str(request.user.id) + "/maps/")
             
+            # Create the html map to save it
+            document_name = str(newdoc).split('/')[2].split('.')[0]
+            f = open("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html", "w+")
+            f.write(AmericanStates(document_name))
+            f.close()
+
             # Read in the html maps 
-            user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps_" + str(request.user.id))
+            user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps/")
             for map in user_maps:
                 maps.append(open(map, "r").read())
             
@@ -50,6 +58,8 @@ class InteractiveView(CreateView):
             return render(request, 'account/exceldocument_form.html', context)
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('landing')
         context = {}
         context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.retrieve_data(request)
@@ -57,12 +67,13 @@ class InteractiveView(CreateView):
         # Read in the html maps 
         #elif len(os.listdir("media/user_" + str(request.user.id) + "/files_" + str(request.user.id))) == 0:
         if len(os.listdir("media")) > 0:
-            user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps_" + str(request.user.id))
+            user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps/")
             for map in user_maps:
-                maps.append(open(map, "r").read())
+                maps.append(open("media/user_" + str(request.user.id) + "/maps/" + map, "r").read())
 
         context['maps'] = maps
         return render(request, 'account/exceldocument_form.html', context)
+
 
 class Registration(View):
 
