@@ -27,9 +27,14 @@
                 <ul>
                 {% for document in documents %}
                     <li>
-                        <a class="shortenName" href="{{ document.upload.url }}">{{ document.upload.name }}</a>
-                        <small>({{ document.upload.size|filesizeformat }})</small>
+                        <form method="post" action="{% url 'delete_file' document.pk %}">
+                            <a class="btn btn-primary" href="{{ document.upload.url }}">{{ document.upload }}</a>
+                            <small>({{ document.upload.size|filesizeformat }})</small>
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete This File</button>
+                        </form>
                     </li>
+                    <br>
                 {% endfor %}
                 
                 <!-- <script>
@@ -58,10 +63,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 {% endblock %}
 
 

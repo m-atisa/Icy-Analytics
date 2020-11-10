@@ -3,11 +3,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.views import View
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin
 
 from django.contrib.auth import logout
 from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView
+from django.views.generic import ListView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import user_passes_test
@@ -20,7 +20,11 @@ from graphs.models import AmericanStates
 #%%
 import os
 #%%
-class InteractiveView(CreateView):
+class MapView(ListView):
+    model = ExcelDocument
+    template_name = 'authenticated/maps.html'
+
+class UploadView(CreateView):
 
     """
     This method allows the user to upload a file 
@@ -55,7 +59,7 @@ class InteractiveView(CreateView):
                 maps.append(open("media/user_" + str(request.user.id) + "/maps/" + map, "r").read())
             
             context['maps'] = maps
-            return render(request, 'account/exceldocument_form.html', context)
+            return render(request, 'authenticated/upload.html', context)
 
     def get(self, request):
         if not request.user.is_authenticated:
@@ -63,17 +67,26 @@ class InteractiveView(CreateView):
         context = {}
         context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.retrieve_data(request)
+        # context['maps'] = AmericanStates.retrieve_data(request)
         maps = []
         # Read in the html maps 
-        #elif len(os.listdir("media/user_" + str(request.user.id) + "/files_" + str(request.user.id))) == 0:
-        if len(os.listdir("media")) > 0:
+        # elif len(os.listdir("media/user_" + str(request.user.id) + "/files_" + str(request.user.id))) == 0:
+        if os.path.exists("media/user_" + str(request.user.id)):
             user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps/")
             for map in user_maps:
                 maps.append(open("media/user_" + str(request.user.id) + "/maps/" + map, "r").read())
 
         context['maps'] = maps
-        return render(request, 'account/exceldocument_form.html', context)
+        return render(request, 'authenticated/upload.html', context)
 
+
+class DeleteFile(View):
+    def post(self, request, pk):
+        file = ExcelDocument.objects.get(pk=pk)
+        document_name = str(file).split('/')[2].split('.')[0]
+        os.remove("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")
+        file.delete()
+        return redirect('upload')
 
 class Registration(View):
 
@@ -129,4 +142,5 @@ class LogIn(View):
         context = {}
         context['signin_form'] = AccountAuthenticationForm()
         return render(request, 'signin.html', context)
+
 

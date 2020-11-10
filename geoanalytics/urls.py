@@ -23,11 +23,9 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 #%%
 from account.views import (
-    Registration, LogOut, LogIn, InteractiveView
+    Registration, LogOut, LogIn, UploadView, DeleteFile
 )
-from graphs.views import (
-    Graph
-)
+
 #%%
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,8 +33,9 @@ urlpatterns = [
     path('signin/', LogIn.as_view(), name='signin'),
     path('register/', Registration.as_view(), name='register'),
     path('logout/', LogOut.as_view(), name='logout'),
-    path('interactive/', InteractiveView.as_view(), name='interactive'),
-    path('american_states/', Graph.as_view(), name='american_states'),
+    
+    path('file/upload', UploadView.as_view(), name='upload'),
+    path('file/delete/<int:pk>/', DeleteFile.as_view(), name='delete_file'),
 
     path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
     path('documentation/', TemplateView.as_view(template_name='documentation.html'), name='documentation'),
