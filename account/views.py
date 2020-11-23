@@ -49,6 +49,7 @@ class UploadView(CreateView):
             
             # Create the html map to save it
             document_name = str(newdoc).split('/')[2].split('.')[0]
+            context['document_name'] = document_name
             f = open("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html", "w+")
             f.write(AmericanStates("media/" + str(newdoc), document_name))
             f.close()
@@ -67,10 +68,8 @@ class UploadView(CreateView):
         context = {}
         context['form'] = ExcelForm(request.FILES)
         context['documents'] = ExcelDocument.retrieve_data(request)
-        # context['maps'] = AmericanStates.retrieve_data(request)
         maps = []
         # Read in the html maps 
-        # elif len(os.listdir("media/user_" + str(request.user.id) + "/files_" + str(request.user.id))) == 0:
         if os.path.exists("media/user_" + str(request.user.id)):
             user_maps = os.listdir("media/user_" + str(request.user.id) + "/maps/")
             for map in user_maps:
@@ -79,12 +78,27 @@ class UploadView(CreateView):
         context['maps'] = maps
         return render(request, 'authenticated/upload.html', context)
 
-
 class DeleteFile(View):
+
     def post(self, request, pk):
         file = ExcelDocument.objects.get(pk=pk)
         document_name = str(file).split('/')[2].split('.')[0]
-        os.remove("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")
+        # If the user uploads a duplicate file django hashes the name and adds a extra '_' with random letters "Qr32f$a4"
+        # Original unique map
+        if (os.path.exists("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")):
+            os.remove("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")
+        # Duplicate map
+        if (os.path.exists("media/user_" + str(request.user.id) + "/maps/" + str(document_name).split('_')[0] + ".html")):
+            os.remove("media/user_" + str(request.user.id) + "/maps/" + str(document_name).split('_')[0] + ".html")
+        
+        # Original unique file
+        if (os.path.exists("media/user_" + str(request.user.id) + "/files/" + document_name + ".csv")):
+            os.remove("media/user_" + str(request.user.id) + "/files/" + document_name + ".csv")
+        # Duplicate file
+        if (os.path.exists("media/user_" + str(request.user.id) + "/files/" + str(document_name).split('_')[0] + ".csv")):
+            os.remove("media/user_" + str(request.user.id) + "/files/" + str(document_name).split('_')[0] + ".csv")
+        
+        # Deletes file from database
         file.delete()
         return redirect('upload')
 

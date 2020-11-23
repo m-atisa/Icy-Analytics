@@ -5,7 +5,8 @@
 
 {% block content %}
 <script src="{% static 'tabs.js' %}" defer></script>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
 
 <div class="container">
     <ul class="tabs">
@@ -15,7 +16,6 @@
     <div class="tab-content">
         <div id="Files" data-tab-content>
             <h1>{{user}}'s files</h1>
-            <h2>Upload</h2>
             <div class="upload-div">
                 <h1>File Upload</h1>
                 <form method="post" enctype="multipart/form-data">
@@ -28,10 +28,11 @@
                 {% for document in documents %}
                     <li>
                         <form method="post" action="{% url 'delete_file' document.pk %}">
-                            <a class="btn btn-primary" href="{{ document.upload.url }}">{{ document.upload }}</a>
-                            <small>({{ document.upload.size|filesizeformat }})</small>
+                            <a class="btn btn-primary" href="">{{ document.filename }}</a>
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Delete This File</button>
+                            <a class="btn btn-primary" href="{{ document.upload.url }}"><i class="fa fa-download" aria-hidden="true"></i></a>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <small>({{ document.upload.size|filesizeformat }})</small>
                         </form>
                     </li>
                     <br>
@@ -46,7 +47,6 @@
         </div>
         <div id="Maps" data-tab-content class="active"> 
             <h1>{{user}}'s maps</h1>
-            <h2>Maps</h2>
             {% for map in maps %}
                 {% autoescape off %}
                     {{ map }}

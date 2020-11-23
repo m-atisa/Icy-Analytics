@@ -13,3 +13,7 @@ tabs.forEach(tab => {
         target.classList.add('active');
     })
 })
+
+// function deleteConfirmation() {
+//     confirm("Are you sure you want do delete this file?");
+// }
