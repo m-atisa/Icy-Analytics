@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 #%%
 from account.views import (
-    Registration, LogOut, LogIn, UploadView, DeleteFile
+    Registration, LogOut, LogIn, UploadView, DeleteFile, SearchBar
 )
 
 #%%
@@ -33,8 +33,9 @@ urlpatterns = [
     path('signin/', LogIn.as_view(), name='signin'),
     path('register/', Registration.as_view(), name='register'),
     path('logout/', LogOut.as_view(), name='logout'),
-    
+
     path('file/upload', UploadView.as_view(), name='upload'),
+    path('file/upload', SearchBar.as_view(), name='upload'),
     path('file/delete/<int:pk>/', DeleteFile.as_view(), name='delete_file'),
 
     path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
@@ -42,7 +43,7 @@ urlpatterns = [
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
     path('pklp/', auth_views.LoginView.as_view(), name='login'), # Don't know why but this is needed
     path('', TemplateView.as_view(template_name='landing.html'), name='landing')
-]
+]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

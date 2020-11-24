@@ -14,6 +14,8 @@ tabs.forEach(tab => {
     })
 })
 
-// function deleteConfirmation() {
-//     confirm("Are you sure you want do delete this file?");
-// }
+$(".wrapper .sidebar .tabs li").click(function(){
+    $(".item").toggleClass("active");
+});
+
+

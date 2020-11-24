@@ -3,32 +3,26 @@
 {% load static %}
 
 {% block main %}
-<div style="background-image: url('static/images/abstract\ dots.jpg'); margin-top: -47px; padding-bottom: 600px;">
-    <section class="my-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-3 mx-auto">
-                    <!-- <div class="text-center">
-                        <div class="vertical-center">
-                            <h1 id="banner-title">Icy Analytics</h1>
-                            <h2 id="banner-white">A Platform for Analyzing Geospatial Data</h2>
-                        </div>
-                    </div> -->
+<div class="container" id="background-image" style="background-image: url('static/images/icy_background.jpg'); z-index: -4;">
+    <div class="row">
+        <div class="col-3 mx-auto">
+            <div class="text-center" style="position: relative;">
+                <div class="vertical-center" id="home-page-center">
+                    {% if request.user.is_authenticated %}
+                        <h2 id="banner-white">Continue Your Data Analytics Journey</h2>
+                        <div class="line-break"></div>
+                        <a href="{% url 'upload' %}" class="btn btn-outline-primary btn-lg" role="button">My Analytics</a>
+                    {% else %}
+                        <h1 id="banner-title">Icy Analytics</h1>
+                        <h2 id="banner-white">A Platform for Analyzing Geospatial Data</h2>
+                        <div class="line-break"></div>
+                        <a href="{% url 'signin' %}" class="btn btn-outline-primary btn-lg" role="button">Get Started</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    </section>
-</div>
-
-<section class="my-5">
-    <div class="container">
-        <div class="row">
-            text
-        </div>
     </div>
-</section>
-
-
+</div>
 {% endblock %}
 <!-- <video id="background-video" playsinline autoplay muted loop>
     <source src="videos/homepage_background_vid.webm" type="video/webm">
