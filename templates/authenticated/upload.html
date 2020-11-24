@@ -46,11 +46,6 @@
             </div>
         </div>
         <div id="Documents" data-tab-content class="active"> 
-            <!-- <div class="search-bar mt-sm-2 mr-2">
-                <form method="get" action="{% url 'upload' %}">
-                    <input type="text" class="form-control" name="q" id="id_q" placeholder="Search...">
-                </form>
-            </div> -->
             <div class="container">
                 <div class="row larger-font">
                     <div class="col"><b>Download File</b></div>
@@ -59,36 +54,26 @@
                     <div class="col"><b>Delete File</b></div>
                 </div>
                 <hr class="solid">
-                {% if documents %}
-                    {% for document in documents %}
-                        <div class="row">
-                            <form method="post" action="{% url 'delete_file' document.pk %}"></form>
-                                {% csrf_token %}
-                                <div class="col">
-                                    <a class="btn btn-primary" href="{{ document.upload.url }}"><i class="fa fa-download" aria-hidden="true"></i></a>
-                                </div>
-                                <div class="col-6">
-                                    <a class="btn btn-primary" href="">{{ document.filename }}</a>
-                                </div>
-                                <div class="col">
-                                    {{ document.uploaded_at }}
-                                </div>
-                                <div class="col">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                    <small>({{ document.upload.size|filesizeformat }})</small>
-                                </div>
-                            </form>
+                {% for document in documents %}
+                    <div class="row">
+                        <div class="col">
+                            <a class="btn btn-primary" href="{{ document.upload.url }}"><i class="fa fa-download" aria-hidden="true"></i></a>
                         </div>
-                        <br>
-                    {% endfor %}
-                {% else %}
-                    <div class="row"> 
-                        <div class="text-center">
-                            No Results
-                            <p>There were no results matching your search: "{{ query }}."</p>
+                        <div class="col-6">
+                            <a class="btn btn-primary" href="">{{ document.filename }}</a>
                         </div>
+                        <div class="col">
+                            {{ document.uploaded_at }}
+                        </div>
+                        <form method="post" action="{% url 'delete_file' document.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <small>({{ document.upload.size|filesizeformat }})</small>
+                        </form>
                     </div>
-                {% endif %}
+                    <br>
+                {% endfor %}
+                
             </div>
         </div>
     </div>

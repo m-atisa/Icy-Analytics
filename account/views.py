@@ -98,27 +98,25 @@ class DeleteFile(View):
     def post(self, request, pk):
         file = ExcelDocument.objects.get(pk=pk)
         document_name = str(file).split('/')[2].split('.')[0]
-
-        if (document_name.split('_')[0] == document_name):
-            # Original unique map
-            if (os.path.exists("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")):
-                os.remove("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")
-            # Original unique file
-            if (os.path.exists("media/user_" + str(request.user.id) + "/files/" + document_name + ".csv")):
-                os.remove("media/user_" + str(request.user.id) + "/files/" + document_name + ".csv")
         # If the user uploads a duplicate file django hashes the name and adds a extra '_' with random letters "Qr32f$a4"
-        else: 
-             # Duplicate map
-            if (os.path.exists("media/user_" + str(request.user.id) + "/maps/" + str(document_name).split('_')[0] + ".html")):
-                os.remove("media/user_" + str(request.user.id) + "/maps/" + str(document_name).split('_')[0] + ".html")
-            # Duplicate file
-            if (os.path.exists("media/user_" + str(request.user.id) + "/files/" + str(document_name).split('_')[0] + ".csv")):
-                os.remove("media/user_" + str(request.user.id) + "/files/" + str(document_name).split('_')[0] + ".csv")
+        # Original unique map
+        if (os.path.exists("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")):
+            os.remove("media/user_" + str(request.user.id) + "/maps/" + document_name + ".html")
+        # Duplicate map
+        if (os.path.exists("media/user_" + str(request.user.id) + "/maps/" + str(document_name).split('_')[0] + ".html")):
+            os.remove("media/user_" + str(request.user.id) + "/maps/" + str(document_name).split('_')[0] + ".html")
+        
+        # Original unique file
+        if (os.path.exists("media/user_" + str(request.user.id) + "/files/" + document_name + ".csv")):
+            os.remove("media/user_" + str(request.user.id) + "/files/" + document_name + ".csv")
+        # Duplicate file
+        if (os.path.exists("media/user_" + str(request.user.id) + "/files/" + str(document_name).split('_')[0] + ".csv")):
+            os.remove("media/user_" + str(request.user.id) + "/files/" + str(document_name).split('_')[0] + ".csv")
         
         # Deletes file from database
         file.delete()
         return redirect('upload')
-
+        
 class Registration(View):
 
     def post(self, request):
