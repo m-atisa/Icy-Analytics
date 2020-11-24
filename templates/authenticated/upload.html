@@ -12,7 +12,6 @@
         <h2>Welcome {{ user }}</h2>
         <ul class="tabs" style="font-size: 20px">
             <li><a href="{% url 'landing' %}"><i class="fas fa-home"></i>Home</a></li>
-            <li data-tab-target="#Profile"><a href="#"><i class="fas fa-user"></i>Profile</a></li>
             <li data-tab-target="#Upload"><a href="#"><i class="fas fa-upload"></i>Upload</a></li>
             <li data-tab-target="#Maps"><a href="#"><i class="fas fa-map"></i>Maps</a></li>
             <li data-tab-target="#Documents"><a href="#"><i class="fas fa-file"></i>Documents</a></li>
@@ -33,17 +32,14 @@
             <br>
         </div>
         <div id="Upload" data-tab-content>
-            <div class="center-login">
-                <div class="upload-div">
+            <div class="center-login" style="border: none">
+                <div class="upload-div" style="font-size: 25px;">
                     <h1>File Upload</h1>
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <!-- {{ form|crispy}} -->
-                        
-                        <!-- <div class="btn btn-primary"> -->
-                            <span>Upload</span>
-                            <input type="file" name="upload" id="id_upload" class="upload" required="" style="cursor: pointer;">
-                        <!-- </div>   -->
+                        <input type="file" name="upload" id="id_upload" class="upload" required="" style="cursor: pointer;">
+                        <br>
+                        <br>
                         <button type="submit" class="btn btn-outline-primary">Submit</button>
                     </form> 
                 </div>

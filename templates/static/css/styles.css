@@ -2,13 +2,14 @@ body {
     color: black;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
+
 span {
     display: block;
 }
+
 [data-tab-content] {
     display: none;
     /* padding: 6px 12px; */
-    border: 1px solid #ccc;
     border-top: none;
 }
 .item {
@@ -104,6 +105,15 @@ span {
 	right: 0;
   	z-index: 3; */
 	margin: auto;
+}
+.column {
+    float: left;
+    width: 50%;
+}
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 #login-background {
     background-image: url(../static/images/login_background.jpg); 
